@@ -1,0 +1,125 @@
+﻿@model APIQuery.Models.NewReg
+@{
+    ViewBag.Title = "Recipe Recommender System - Set your options and preference";
+}
+
+<h2>Register your preferences</h2>
+@using (Html.BeginForm("Save", "Register", FormMethod.Post))
+{
+    <div>
+        <label>Your User ID:</label>
+        @Html.TextBoxFor(m => m.AppUserId)
+    </div>
+    <div>
+        <label>Meal Type:</label>
+        @for (int i = 0; i < Model.MealType.Count(); i++)
+        {
+        <tr>
+            <td>
+                @Html.CheckBoxFor(m => m.MealType[i].IsSelected)
+            </td>
+            <td>
+                @Html.DisplayFor(m => m.MealType[i].SelectedItemText)
+                @Html.HiddenFor(m => m.MealType[i].SelectedItemValue)
+                @Html.HiddenFor(m => m.MealType[i].SelectedItemText)
+            </td>
+        </tr>
+        }
+    </div>
+    <div>
+        <label>Cuisines:</label>
+        @for (int i = 0; i < Model.CuisineType?.Count(); i++)
+        {
+            <tr>
+                <td>
+                    @Html.CheckBoxFor(m => m.CuisineType[i].IsSelected)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => m.CuisineType[i].SelectedItemText)
+                    @Html.HiddenFor(m => m.CuisineType[i].SelectedItemValue)
+                    @Html.HiddenFor(m => m.CuisineType[i].SelectedItemText)
+                </td>
+            </tr>
+        }
+    </div>
+    <label>Ingredients you love in your meal</label>
+    <div>
+        <label>Meat Optons:</label>
+        <table>
+            <tr>
+            @for (int i = 0; i < Model.MeatOptions?.Count(); i++)
+            {
+                <td>
+                    @Html.CheckBoxFor(m => m.MeatOptions[i].IsSelected)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => m.MeatOptions[i].SelectedItemText)
+                    @Html.HiddenFor(m => m.MeatOptions[i].SelectedItemValue)
+                    @Html.HiddenFor(m => m.MeatOptions[i].SelectedItemText)
+                </td>
+            }
+            </tr>
+        </table>
+    </div>
+    <div>
+        <label>Sea Food Optons:</label>
+        <table>
+            <tr>
+                @for (int i = 0; i < Model.SeafoodOptions?.Count(); i++)
+                {
+
+                    <td>
+                        @Html.CheckBoxFor(m => m.SeafoodOptions[i].IsSelected)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => m.SeafoodOptions[i].SelectedItemText)
+                        @Html.HiddenFor(m => m.SeafoodOptions[i].SelectedItemValue)
+                        @Html.HiddenFor(m => m.SeafoodOptions[i].SelectedItemText)
+                    </td>
+
+                }
+            </tr>
+        </table>
+    </div>
+    <div>
+        <label>Veggie Optons:</label>
+         @Html.ListBox("SelectedVeggieOptions", (MultiSelectList)ViewBag.VeggieOptions)
+    </div>
+    <div>
+        <label>Healthy Optons:</label>
+        <table>
+            <tr>
+                @for (int i = 0; i < Model.HealthyOptions?.Count(); i++)
+                {
+                    <td>
+                        @Html.CheckBoxFor(m => m.HealthyOptions[i].IsSelected)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => m.HealthyOptions[i].SelectedItemText)
+                        @Html.HiddenFor(m => m.HealthyOptions[i].SelectedItemValue)
+                        @Html.HiddenFor(m => m.HealthyOptions[i].SelectedItemText)
+                    </td>
+
+                }
+            </tr>
+        </table>
+    </div>
+    <div>
+        <label>Cooking effort preffered:</label>
+        <table>
+            <tr>
+               <td>@Html.RadioButton("CookingEffort", "Easy")Easy</td>
+               <td>@Html.RadioButton("CookingEffort", "Medium")Medium</td>
+               <td>@Html.RadioButton("CookingEffort", "Hard")Hard</td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        @Html.HiddenFor(m => m.AppUserId)
+    </div>
+    <input type="submit" value="Register" />
+    if (ViewBag.result != null && ViewBag.result == "ok")
+    {
+        <div style="font-size:medium; color:green; font-style:italic">Thank you for registering !. Start browsing <a href="/register/home">recipes</a></div>
+    }
+}

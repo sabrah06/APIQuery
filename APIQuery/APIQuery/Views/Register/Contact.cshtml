@@ -1,0 +1,42 @@
+﻿@using APIQuery.Models;
+@model APIQuery.Models.Contact
+@{
+    ViewBag.Title = "Recipe Recommender System - Contact Us";
+}
+<style>
+.contact ul
+{
+    list-style-type:none;
+    padding: 0;
+    margin: 0;
+}
+.validationError {
+    color:red;
+    font-weight:600;
+}
+</style>
+<h2>Contact</h2>
+@using (Html.BeginForm("contact", "register", FormMethod.Post))
+{
+    <div id="contact" class="contact">
+        <ul>
+            <li>
+                <label>Full Name: </label>
+                @Html.TextBoxFor(m => m.FullName)
+                @Html.ValidationMessage("FullName", "*", new { @class = "validationError" })
+                </li>
+            <li>
+                <label>Contact Information: </label>
+                @Html.TextAreaFor(m => m.ContactInfo, new { rows = "6", cols = "40" })
+                @Html.ValidationMessage("ContactInfo", "*", new { @class = "validationError" })
+            </li>
+            <li>
+                <input type="submit" value="Send your Details" typeof="submit" id="btnContact" />
+            </li>
+            @if (ViewBag.Success == true)
+            {
+                <li><h4>Thank you for the contact information you provided. We will be in contact with you shortly.</h4></li>
+            }
+        </ul>
+    </div>
+}

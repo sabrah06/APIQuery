@@ -1,0 +1,15 @@
+﻿@model string
+@{
+    ViewBag.Title = "Options saved confirm";
+}
+
+<h2>Your options update</h2>
+@if (ViewBag.result == "ok")
+{
+    <div>Your options have been successfully updated</div>
+}
+else
+{
+    <div>There has been a problem with the options save. Please try again.</div>
+}
+

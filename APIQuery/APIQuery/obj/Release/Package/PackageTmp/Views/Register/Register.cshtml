@@ -1,0 +1,57 @@
+﻿@model APIQuery.Models.Register
+@{
+    ViewBag.Title = "Recipe Recommender System - User Registration";
+}
+<style>
+.user-details ul
+{
+    list-style-type:none;
+    padding: 0;
+    margin: 0;
+}
+.validationError {
+    color:red;
+    font-weight:600;
+}
+</style>
+<h2>Register for Recipe Recommendation System</h2>
+@using (Html.BeginForm("Register", "Register", FormMethod.Post))
+{
+    <div class="user-details">
+        <ul>
+            <li>
+                <span>Enter your Full name</span>
+                @Html.TextBoxFor(m => m.FullName)
+                @Html.ValidationMessage("FullName", "*", new { @class = "validationError" })
+            </li>
+            <li>
+                <span>Enter your user name</span>
+                @Html.TextBoxFor(m => m.UserName)
+                @Html.ValidationMessage("UserName", "*", new { @class = "validationError" })
+            </li>
+            <li>
+                <span>Enter your password</span>
+                @Html.PasswordFor(m => m.Pass)
+                @Html.ValidationMessage("Pass", "*", new { @class = "validationError" })
+            </li>
+            <li>
+                <span>Confirm your password</span>
+                @Html.PasswordFor(m => m.ConfirmPass)
+                @Html.ValidationMessage("ConfirmPass", "*", new { @class = "validationError" })
+            </li>
+            <li>
+                <span>Enter your email</span>
+                @Html.TextBoxFor(m => m.E_mail)
+                @Html.ValidationMessage("E_mail", "*", new { @class = "validationError" })
+            </li>
+            <li>
+                <button class="green_button" id="lbUpdateDetails" name="lbUpdateDetails" type="submit">Save Registration</button>
+            </li>
+        </ul>
+        @if (ViewBag.result == "ok")
+        {
+        <div style="font-size:medium; color:green; font-style:italic">Thank you for registering !. Please <a href="/register/login">login</a></div>
+        }
+    </div>
+}
+

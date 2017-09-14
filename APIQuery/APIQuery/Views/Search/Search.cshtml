@@ -1,0 +1,101 @@
+﻿
+@{
+    ViewBag.Title = "Recipe Recommender System - Import recipes";
+}
+<style>
+    .rlabels {margin: 10px}
+    .rbutton {margin: 10px}
+</style>
+<h2>Import Recipes</h2>
+<div class="rlabels">
+    <label>Enter a diet</label> 
+    <input type="text" id="diet" placeholder="Search recipe" /> (eg: Chicken, rice, bread, noodles, brocooli)
+</div>
+<div class="rlabels">
+    <label>Choose a cuisine</label>
+    @Html.ListBox("cuisine", (SelectList)ViewBag.CuisineType)
+</div>
+@*<input type="text" id="cuisine" placeholder="Cusine" />*@
+<input type="button" class="rbutton" id="btnSearch" value="search" />
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnSearch").click(function () {
+            var cusineVal = $("#cuisine").val();
+            var dietval = $("#diet").val();
+            if (cusineVal == "undefined" || cusineVal == "") {
+                alert("Choose a cuisine")
+                return;
+            }
+            if (dietval == "undefined" || dietval == "") {
+                alert("Enter a diet you want to import recipes")
+                return;
+            }
+            alert("cuisine :" + cusineVal + ", diet:" + dietval);
+            $.ajax({
+                type: "GET",
+                url: "/search/GetRecipebyCuisineDiet?cusine=" + cusineVal + "&diet="+ dietval,
+                data: "{}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (msg) {
+                    ImportedData(msg.Results);
+                }
+            });
+        });
+    });
+    function GetRecipeIngredients(recip_id)
+    {
+        $.ajax({
+            type: "GET",
+            url: "/search/GetRecipeIngredients?recipe_id=" + recip_id,
+            data: "{}",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (msg) {
+                processRecipeData(msg.Recipes);
+            }
+        });
+    }
+    function processRecipeData(data) {
+        var target = $("#recipesTable");
+        target.empty();
+        for (var i = 0; i < data.length; i++) {
+            var recip = data[i];
+            target.append("<tr><td>" + recip.publisher + "</td><td>"
+            + recip.title + "</td><td><img src='" + recip.image_url + "' href='" + recip.source_url + "' /></td></tr>");
+        }
+    }   
+
+    function ImportedData(data) {
+        var target = $("#recipesTable");
+        target.empty();
+        for (var i = 0; i < data.length; i++) {
+            var recip = data[i];
+            target.append("<tr><td>" + recip.Id + "</td><td>"
+            + recip.title + "</td></tr>");
+        }
+    }
+
+    function processData(data) {
+        var target = $("#recipesTable");
+        target.empty();
+        for (var i = 0; i < data.length; i++) {
+            var recip = data[i];
+            target.append("<tr><td>" + recip.Id + "</td><td>"
+            + recip.title + "</td></tr>");
+        }
+    }   
+</script>
+<table style="background-color: grey; color:whitesmoke">
+    <thead>
+        <tr>
+            <th>RecipeId</th>
+            <th>Title</th>
+        </tr>
+    </thead>
+    <tbody id="recipesTable">
+    </tbody>
+</table>
+

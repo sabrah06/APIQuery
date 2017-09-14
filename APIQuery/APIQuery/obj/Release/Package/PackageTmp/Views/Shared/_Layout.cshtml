@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <nav>
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Recipe Recommender System", "home", "Register", new { area = "" }, new { @class = "navbar-brand" })</li>
+                    <li>
+                        <a href="#">Register</a>
+                        <ul>
+                            <li><a href="/register/register">New user</a></li>
+                            <li><a href="/register/index">User Preference</a></li>
+                            <li><a href="/register/login">Login</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/browse/index">Recipes</a>
+                        <ul>
+                            <li><a href="/register/home">My recipes</a></li>
+                            <li><a href="/browse/index">Browse recipes</a></li>
+                            <li><a href="/search/search">Import New recipes</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Contact</a>
+                        <ul>
+                            <li><a href="/register/feedback">Survey feedback</a></li>
+                            <li><a href="/register/contact">Contact</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Evaluation</a>
+                        <ul>
+                            <li><a href="/evaluate/index">Evaluate Recommendation</a></li>
+                            <li><a href="/evaluate/errormetrics">Error Metrics</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/register/logout">Logout</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <hr />
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+    <hr />
+    <footer>
+        <p>&copy; @DateTime.Now.Year - Recipe Recommender System</p>
+    </footer>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script>
+        $(function () {
+            $("body nav li").each(function () {
+                if ($(this).find("ul").length > 0) {
+
+                    //show subnav on hover
+                    $(this).mouseenter(function () {
+                        $(this).find("ul").stop(true, true).slideDown();
+                    });
+
+                    //hide submenus on exit
+                    $(this).mouseleave(function () {
+                        $(this).find("ul").stop(true, true).slideUp();
+                    });
+
+                    $(this).find("ul").mousemove(function () {
+                        $(this).stop(true, true).show();
+                    });
+                }
+            });
+    });
+    </script>
+</body>
+</html>

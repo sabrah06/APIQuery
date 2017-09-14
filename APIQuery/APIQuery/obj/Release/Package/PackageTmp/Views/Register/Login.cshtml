@@ -1,0 +1,120 @@
+﻿@using APIQuery.Models;
+@model APIQuery.Models.Login
+@{
+    ViewBag.Title = "Recipe Recommender System - User Login";
+    string recipe_ref = string.Empty;
+}
+<style>
+.login
+{     
+    color:darkslateblue;    
+    border-color:White;
+}
+
+.login ul
+{
+    list-style-type:none;
+    padding: 0;
+    margin: 0;
+}
+.login ul li {
+    display: table-row;
+}
+.validationError {
+    color:red;
+    font-weight:600;
+}
+input[type="submit"] {
+    background: none repeat scroll 0 0 #368200;
+    cursor: pointer;
+    display: inline-block;
+    padding: 10px;
+    text-transform: uppercase;
+}
+</style>
+<h2>Enter your login credentials</h2>
+@using (Html.BeginForm("login", "register", FormMethod.Post))
+{
+<div id="login" class="login">
+    @if(string.IsNullOrEmpty(Model.FullName))
+    { 
+        <ul>
+            <li>
+                <div>
+                    User name:@Html.TextBoxFor(m => m.Username)
+                    @Html.ValidationMessage("Username", "*", new { @class = "validationError" })
+                </div>
+            </li>
+            <li>
+                <div>
+                Password:   @Html.PasswordFor(m => m.Password)
+                @Html.ValidationMessage("Password", "*", new { @class = "validationError" })</div>
+            </li>
+            <li>
+                <div>
+                Verified Pin:@Html.PasswordFor(m => m.VerfiedPin)
+                @Html.ValidationMessage("VerfiedPin", "*", new { @class = "validationError" })</div>
+            </li>
+            @if(ViewBag.invalidLogin == true)
+            {
+                <li><label style="font-family:'Lucida Bright'; font-weight:300; color:orangered">You login credentials are not successful.</label></li>
+            }
+            <li>
+                <input type="submit" value="Login" typeof="submit" id="btnLogin"/>
+                <input type="submit" value="Register" typeof="submit" id="btnRegister" onclick="register();" />
+            </li>
+        </ul>
+    }
+    else
+    {
+        <ul>
+            <li>
+                <div>
+                    <label>Welcome @Model.FullName, Your favorite recipes</label>
+                    <h2>Recipes you have liked and may have tried</h2>
+                    <ul>
+                        @foreach (RecipeRecommendaton rc in Model.RatedRecipes)
+                        {
+                            recipe_ref = rc.Title.Replace(" ", "-") + "-" + rc.External_Recipe_Id;
+                            if (!string.IsNullOrEmpty(rc.Rating))
+                            {
+                                <li><a href="/browse/detail?extRecipeId=@recipe_ref" title="@rc.Title">@rc.Title (@rc.Rating)</a></li>
+                            }
+                            else
+                            {
+                                <li><a href="/browse/detail?extRecipeId=@recipe_ref">@rc.Title</a></li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <h2>Recipes you may wish to try</h2>
+                    <ul>
+                        @foreach (RecipeRecommendaton rc in Model.ListofRecipes)
+                        {
+                            recipe_ref = rc.Title.Replace(" ", "-") + "-" + rc.External_Recipe_Id;
+                            if (!string.IsNullOrEmpty(rc.PredictedRating))
+                            {
+                                <li><a href="/browse/detail?extRecipeId=@recipe_ref">@rc.Title (@rc.PredictedRating)</a></li>
+                            }
+                            else
+                            {
+                                <li><a href="@rc.Image_link">@rc.Title</a></li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </li>
+        </ul>
+     }
+</div>
+}
+<script>
+    function register()
+    {
+        self.close();
+        window.open("/register/register");
+    }
+</script>

@@ -1,0 +1,69 @@
+﻿@using APIQuery.Models;
+@model Homeuser
+@{
+    ViewBag.Title = "Recipe Recommender System - My Recipes";
+    string recipe_ref = string.Empty;
+}
+<style>
+.home
+{
+    color:darkslateblue;
+    border-color:White;
+}
+
+.home ul
+{
+    list-style-type:none;
+    padding: 0;
+    margin: 0;
+}
+.home ul li {
+    display: table-row;
+}
+</style>
+<h2>Welcome @Model.FullName, Your favourite recipes</h2>
+<div class="home">
+    <ul>
+        <li>
+            <div>
+
+                <h2>Recipes you have liked and may have tried</h2>
+                <ul>
+                    @foreach (RecipeRecommendaton rc in Model.RatedRecipes)
+                    {
+                        recipe_ref = rc.Title.Replace(" ", "-") + "-" + rc.External_Recipe_Id;
+                        if (!string.IsNullOrEmpty(rc.Rating))
+                        {
+                            <li><a href="/browse/detail?extRecipeId=@recipe_ref">@rc.Title (@Html.Partial("rating", Convert.ToInt32(rc.Rating)))</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="/browse/detail?extRecipeId=@recipe_ref">@rc.Title</a></li>
+                        }
+                    }
+                </ul>
+            </div>
+        </li>
+        <li>
+            <div>
+                <h2>Recipes you may wish to try</h2>
+                <ul>
+                    @foreach (RecipeRecommendaton rc in Model.ListofRecipes)
+                    {
+                        recipe_ref = rc.Title.Replace(" ", "-") + "-" + rc.External_Recipe_Id;
+                        if (!string.IsNullOrEmpty(rc.PredictedRating))
+                        {
+                            <li><a href="/browse/detail?extRecipeId=@recipe_ref">@rc.Title (@rc.PredictedRating - predicted rating)</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="/browse/detail?extRecipeId=@recipe_ref">@rc.Title</a></li>
+                        }
+                    }
+                </ul>
+            </div>
+        </li>
+    </ul>
+</div>
+
+

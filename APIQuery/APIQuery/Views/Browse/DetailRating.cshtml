@@ -1,0 +1,123 @@
+﻿@using System.Globalization;
+@using System.Threading;
+@using APIQuery.Models
+@model RecipeDetail
+@{
+    ViewBag.Title = "Detail";
+    CultureInfo cultureInfo = Thread.CurrentThread.CurrentCulture;
+    string recipe_ref = Model.Title.Replace(" ", "-") + "-" + Model.External_Recipe_Id;
+}
+<style>
+    .bcrumbs{
+        font-family:Arial, Helvetica, sans-serif;
+        font-style:normal;
+        font-size:medium;
+        padding: 0 30px 20px 0;
+    }
+    .recipeInfo{
+        float:left;
+    }
+    .cookinginst{
+        float: left;
+        font-family:Arial, Helvetica, sans-serif;
+        font-style:normal;
+        font-size:medium;
+        padding: 0 30px 20px 0;
+    }
+    .rimage{
+        float: left;
+    }
+    .rmeta {
+        font-family: Arial, Helvetica, sans-serif;
+        font-style: normal;
+        font-size: small;
+        padding: 280px 0 0 450px;
+    }
+</style>
+<div class="bcrumbs"><a href="/browse/index" alt="browse recipes" title="browse recipes">Browse recipes</a></div>
+<div id="recipeInfo" class="recipeInfo">
+    <div class="rtitle">
+        <h3><a href="#" src="" title="@Model.Title" alt="@Model.Title">@Model.Title</a></h3>@cultureInfo.TextInfo.ToTitleCase(Model.Cuisine.Replace("+", " and "))
+    </div>
+    <div class="rrating">
+        @if (System.Convert.ToInt16(Model.Rating) > -1)
+            {
+            <label>Rating (@Model.Rating)</label>
+        }
+    </div>
+    <div class="rimage">
+        <img src="@Model.ImageLink" title="@Model.Title" alt="@Model.Title" width="400" height="400" />
+    </div>
+    <div class="rmeta">
+        <label><img src="/images/fast.svg" alt="Cooking effort" />&nbsp;Cooking Effort: (@Model.CookingEffort)</label><br />
+        @if (Model.DiaryFree)
+        {
+            <label><img src="/images/dairy-free.svg" alt="Diary Free" />&nbsp;Diary Free</label><br />
+        }
+        @if (Model.GlutenFree)
+        {
+            <label><img src="/images/gluten-free.svg" alt="Gluten Free" />&nbsp;Gluten Free</label><br />
+        }
+        @if (Model.Vegan)
+        {
+            <label>Vegan</label><br />
+        }
+        @if (Model.Vegetarian)
+        {
+            <label>Vegetarian</label><br />
+        }
+        @if (Model.VeryHeathy)
+        {
+            <label>Very Healthy</label> <br />
+        }
+        @if (Model.VeryPopular)
+        {
+            <label><img src="/images/popular.svg" alt="Popular" />&nbsp;Very Popular</label><br />
+        }
+        @if (Convert.ToInt32(Model.Rating) <= 0 && ViewBag.UserId != null && Convert.ToInt32(ViewBag.UserId) > 0)
+        {
+            <label><img src="/images/star.jpg" alt="Rate it" style="height:20px;width:20px"/>&nbsp;Rate the recipe</label><br />
+            <select id="optrating"><option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+            </select>
+            <select id="optLike"><option value="1">Like</option><option value="0">Unlike</option></select>
+            <input type="button" value="Save Rating" onclick="javascript:updateRating(@Model.RecipeId, @ViewBag.UserId)"/>
+        }
+        else if (Convert.ToInt32(Model.Rating) > 0 && ViewBag.UserId != null && Convert.ToInt32(ViewBag.UserId) > 0)
+        {
+            Html.RenderAction("UserRatingReview", new { UserId = Convert.ToInt32(ViewBag.UserId), RecipeId = Model.RecipeId });
+        }
+    </div>
+</div>
+<script>
+    function updateRating(recipeId, userid) {
+        var rating = $("#optrating").val();
+        var likeDislike = $("#optLike").val();
+        alert("userId=" + userid +  "&RecipeId=" + recipeId + "&Rating=" + rating + "&likeDislike=" + likeDislike);
+        $.ajax({
+            type: 'POST',
+            url: "/browse/updateRating",
+            data: "userId=" + userid +  "&RecipeId=" + recipeId + "&Rating=" + rating + "&likeDislike=" + likeDislike,
+            success: function (data) {
+                return data.success;
+            }
+        });
+    }
+
+    function updateTracking(recipeId, userid, cuisineType, loggedInfo) {
+        
+        $.ajax({
+            type: 'POST',
+            url: "/browse/updateTracking",
+            data: "recipeId=" + recipeId + "&userId=" + userid + "&loggedInfo=" + loggedInfo + "&cuisineType=" + cuisineType,
+            success: function (data) {
+                //window.location = "https://spoonacular.com/recipes/@recipe_ref";
+                window.open("https://spoonacular.com/recipes/@recipe_ref", '_blank');
+                return data.TrackingId;
+            }
+        });
+    }
+</script>

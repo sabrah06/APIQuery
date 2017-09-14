@@ -1,0 +1,79 @@
+﻿@using System.Globalization;
+@using System.Threading;
+@using APIQuery.Models;
+@model IList<MenuNav>
+@{
+    ViewBag.Title = "Recipe Recommender System - Browse recipes";
+    string currmenu = string.Empty;
+    CultureInfo cultureInfo = Thread.CurrentThread.CurrentCulture;
+}
+<style>
+    .menuheader{
+        list-style-type:square;
+        font-family:Arial, Helvetica, sans-serif;
+        font-style:normal;
+        font-size:large;
+    }
+    .menunav {
+        list-style:none;
+        font-family:Arial, Helvetica, sans-serif;
+        font-style:normal;
+        font-size:medium;
+        padding: 0 30px 20px 0;
+    }
+    .recipeinfo {
+        float:left;
+    }
+    .menuitem {
+        cursor: pointer;
+        padding: 0 0px 30px 0;
+    }
+</style>
+<script type="text/javascript">
+    function fetchInfo(currmenu, cuisine) {
+        $.ajax({
+            type: 'GET',
+            url: "/browse/loadRecipes",
+            data: "cuisine=" + currmenu + "&diet=" + cuisine,
+            success: function (data) {
+                $('#RecipeInfo').html(data);
+            }
+        });
+    }
+</script>
+<h2>Recipes</h2>
+<table style="border-style:dashed;" width="100%">
+    <tr>
+    <td valign="top">
+        <div class="menu">
+            <ul class="menuheader">
+                @foreach (MenuNav menuitem in Model)
+                {
+                    if(string.IsNullOrEmpty(currmenu))
+                    {
+                        currmenu = menuitem.Cuisine;
+                        <li>@cultureInfo.TextInfo.ToTitleCase(menuitem.Cuisine.ToLower())</li>
+                        @:<ul class="menunav">
+                    }
+                    if (currmenu.ToLower() != menuitem.Cuisine.ToLower())
+                    {
+                        currmenu = menuitem.Cuisine;
+                        @:</ul>
+                        <li>@cultureInfo.TextInfo.ToTitleCase(menuitem.Cuisine.ToLower())</li>
+                        @:<ul class="menunav">
+                    }
+                    <li><a class="menuitem" onclick="fetchInfo('@currmenu', '@menuitem.Section.ToLower()')">@cultureInfo.TextInfo.ToTitleCase(menuitem.Section.ToLower())</a></li>
+                }
+            </ul>
+        </div>
+    </td>
+    <td>
+        <div class="recipeinfo" id="RecipeInfo">
+            <h3>Browse a collection of recipes by clicking the links on the left and <br/>rate your favourite one.</h3>
+        </div>
+    </td>
+    </tr>
+</table>
+
+
+

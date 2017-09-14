@@ -1,0 +1,49 @@
+﻿@using System.Globalization;
+@using System.Threading;
+@using APIQuery.Models
+@model IList<SpoonRecipeInfo>
+@{
+    ViewBag.Title = "Recipe Recommender System - Import recipes";
+    Layout = "";
+    CultureInfo cultureInfo = Thread.CurrentThread.CurrentCulture;
+}
+<style>
+    .rimage{
+        right:10px;
+    }
+</style>
+<div>
+    <a href="/browse/index">Browse cusines</a>
+</div>
+@foreach (SpoonRecipeInfo spi in Model)
+{
+    <div class="rInfo">
+        <div class="rtitle">
+            <h3><a href="javascript:updateTracking(@spi.RecipeId, @ViewBag.UserId, '@spi.Cuisine', 'Viewinfo', '@spi.Title.Replace(' ', '-')-@spi.External_Recipe_Id')" src="" title="@spi.Title" alt="@spi.Title">@spi.Title</a></h3>@cultureInfo.TextInfo.ToTitleCase(spi.Cuisine.Replace("+", " and "))
+        </div>
+        <div class="rrating">
+            @if (System.Convert.ToInt16(spi.Rating) > -1)
+            {
+                <label>Rating (@spi.Rating)</label>
+            }
+            <label>Cooking Effort: (@spi.CookingEffort)</label>
+        </div>
+        <div class="rimage">
+            <img src="@spi.ImageLink" title="@spi.Title" alt="@spi.Title" width="150" height="150" />
+        </div>
+    </div>
+}
+<script>
+    function updateTracking(recipeId, userid, cuisineType, loggedInfo, recipe_ref) {
+        $.ajax({
+            type: 'POST',
+            url: "/browse/updateTracking",
+            data: "recipeId=" + recipeId + "&userId=" + userid + "&loggedInfo=" + loggedInfo + "&cuisineType=" + cuisineType,
+            success: function (data) {
+                window.open("/browse/detail?extRecipeId="+recipe_ref, '_self');
+                return data.TrackingId;
+            }
+        });
+    }
+</script>
+

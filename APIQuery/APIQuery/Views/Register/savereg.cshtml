@@ -1,0 +1,15 @@
+﻿@model string
+@{
+    ViewBag.Title = "User Registration";
+}
+
+<h2>User registration</h2>
+@if (ViewBag.result == "ok")
+{
+    <div>You have successfully Registered</div>
+}
+else
+{
+    <div>There has been a problem with the options save. Please try again.</div>
+}
+

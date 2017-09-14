@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="ApiConnectionString-Web.config Connection String" description="ApiConnectionString Connection String used in web.config by the application to access the database." defaultValue="Data Source=recipereco.c1msatqgvyfp.eu-west-2.rds.amazonaws.com, 1433;Initial Catalog=recipeReco;Persist Security Info=True;User ID=awsdbuser;Password=awsdbuser123$;Encrypt=False" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\ACT\ Project\\APIQuery\\APIQuery\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='ApiConnectionString']/@connectionString" />
+  </parameter>
+  <parameter name="DefaultConnection-Web.config Connection String" description="DefaultConnection Connection String used in web.config by the application to access the database." defaultValue="DefaultConnection_ConnectionString" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\ACT\ Project\\APIQuery\\APIQuery\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DefaultConnection']/@connectionString" />
+  </parameter>
+</parameters>

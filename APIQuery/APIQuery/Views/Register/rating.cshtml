@@ -1,0 +1,12 @@
+﻿@model int
+@{
+    Layout = "";
+}
+@if (Model > 0)
+{
+    for (int sIndex = 0; sIndex < Model; sIndex++)
+    {
+        <label><img src="/images/star.jpg" alt="Rating" style="height:10px;width:10px" /></label>
+    }
+}
+

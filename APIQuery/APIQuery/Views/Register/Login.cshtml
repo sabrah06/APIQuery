@@ -1,0 +1,76 @@
+﻿@using APIQuery.Models;
+@model APIQuery.Models.Login
+@{
+    ViewBag.Title = "Recipe Recommender System - User Login";
+    string recipe_ref = string.Empty;
+}
+<style>
+.login
+{     
+    color:darkslateblue;    
+    border-color:White;
+}
+
+.login ul
+{
+    list-style-type:none;
+    padding: 0;
+    margin: 0;
+}
+.login ul li {
+    display: table-row;
+}
+.validationError {
+    color:red;
+    font-weight:600;
+}
+input[type="submit"] {
+    background: none repeat scroll 0 0 #368200;
+    cursor: pointer;
+    display: inline-block;
+    padding: 10px;
+    text-transform: uppercase;
+}
+</style>
+<h2>Enter your login credentials</h2>
+@using (Html.BeginForm("login", "register", FormMethod.Post))
+{
+<div id="login" class="login">
+    @if(string.IsNullOrEmpty(Model.FullName))
+    { 
+        <ul>
+            <li>
+                <div>
+                    User name:@Html.TextBoxFor(m => m.Username)
+                    @Html.ValidationMessage("Username", "*", new { @class = "validationError" })
+                </div>
+            </li>
+            <li>
+                <div>
+                Password:   @Html.PasswordFor(m => m.Password)
+                @Html.ValidationMessage("Password", "*", new { @class = "validationError" })</div>
+            </li>
+            <li>
+                <div>
+                Verified Pin:@Html.PasswordFor(m => m.VerfiedPin)
+                @Html.ValidationMessage("VerfiedPin", "*", new { @class = "validationError" })</div>
+            </li>
+            @if(ViewBag.invalidLogin == true)
+            {
+                <li><label style="font-family:'Lucida Bright'; font-weight:300; color:orangered">You login credentials are not successful.</label></li>
+            }
+            <li>
+                <input type="submit" value="Login" typeof="submit" id="btnLogin"/>
+                <input type="submit" value="Register" typeof="submit" id="btnRegister" onclick="register();" />
+            </li>
+        </ul>
+    }
+</div>
+}
+<script>
+    function register()
+    {
+        self.close();
+        window.open("/register/register");
+    }
+</script>

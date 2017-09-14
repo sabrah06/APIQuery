@@ -1,0 +1,94 @@
+﻿@using System.Globalization;
+@using System.Threading;
+@using APIQuery.Models
+@model IList<RecipeRecommendaton>
+@{
+    ViewBag.Title = "Evaluation of Recipe Recommendation";
+    CultureInfo cultureInfo = Thread.CurrentThread.CurrentCulture;
+    string imageUrl = string.Empty;
+    RecipeRecommendaton spi = new RecipeRecommendaton();
+}
+<style>
+    .rimage {
+        right: 10px;
+    }
+</style>
+@for (int iIndex = 0;iIndex < Model.Count;iIndex++)
+{
+    spi = (RecipeRecommendaton)Model[iIndex];
+    imageUrl = $"https://spoonacular.com/recipeImages/{spi.Image_link}";
+    <div class="rInfo">
+        <div class="rtitle">
+            <h3><a href="javascript:updateTracking(@spi.RecipeId, @ViewBag.UserId, '@spi.CuisineMealType', 'Viewinfo', '@spi.Title.Replace(' ', '-')-@spi.External_Recipe_Id')" src="" title="@spi.Title" alt="@spi.Title">@spi.Title</a></h3>         
+            <h4>Cuisine: @cultureInfo.TextInfo.ToTitleCase(spi.CuisineMealType.Replace("+", " and "))</h4>
+            @if (Convert.ToInt32(Model[iIndex].Rating) <= 0 && ViewBag.UserId != null && Convert.ToInt32(ViewBag.UserId) > 0)
+            {
+                <label><img src="http://localhost:65114/images/star.jpg" alt="Rate it" style="height:20px;width:20px" />&nbsp;Rate the recipe</label><br />
+                <select id="optrating_@Model[iIndex].RecipeId">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+                <select id="optLike_@Model[iIndex].RecipeId"><option value="1">Like</option><option value="0">Unlike</option></select>
+                <input type="button" value="Save Rating" onclick="javascript:updateRating(@Model[iIndex].RecipeId, @ViewBag.UserId)" />
+                <input type="button" value="Save & View Rating" onclick="javascript:SaveViewrating(@Model[iIndex].RecipeId, @ViewBag.UserId, '@spi.Title.Replace(' ', '-')-@spi.External_Recipe_Id')" />
+            }
+            else if (Convert.ToInt32(Model[iIndex].Rating) > 0 && ViewBag.UserId != null && Convert.ToInt32(ViewBag.UserId) > 0)
+            {
+                Html.RenderAction("UserRating", new { UserId = Convert.ToInt32(ViewBag.UserId), RecipeId = Model[iIndex].RecipeId });
+            }
+            <br /><br />
+            <label>Cooking Effort: (@spi.CookingEffort)</label>
+        </div>
+        <div class="rimage">
+            <a href="javascript:updateTracking(@spi.RecipeId, @ViewBag.UserId, '@spi.CuisineMealType', 'Viewinfo', '@spi.Title.Replace(' ', '-')-@spi.External_Recipe_Id')" src="" title="@spi.Title" alt="@spi.Title"><img src="@imageUrl" title="@spi.Title" alt="@spi.Title" width="200" height="200" /></a>
+        </div>
+    </div> 
+    <hr/>
+}
+<script>
+    function updateRating(recipeId, userid) {
+        var rating = $("#optrating_" + recipeId).val();
+        var likeDislike = $("#optLike_" + recipeId).val();
+        //alert("userId=" + userid + "&RecipeId=" + recipeId + "&Rating=" + rating + "&likeDislike=" + likeDislike);
+        $.ajax({
+            type: 'POST',
+            url: "/browse/updateRating",
+            data: "userId=" + userid + "&RecipeId=" + recipeId + "&Rating=" + rating + "&likeDislike=" + likeDislike,
+            success: function (data) {
+                alert("Thankyou for your Rating");
+                return data.success;
+            }
+        });
+    }
+    function updateTracking(recipeId, userid, cuisineType, loggedInfo, recipe_ref) {
+        $.ajax({
+            type: 'POST',
+            url: "/browse/updateTracking",
+            data: "recipeId=" + recipeId + "&userId=" + userid + "&loggedInfo=" + loggedInfo + "&cuisineType=" + cuisineType,
+            success: function (data) {
+                window.open("/browse/detail?extRecipeId=" + recipe_ref, '_blank');
+                return data.TrackingId;
+            }
+        });
+    }
+    function SaveViewrating(recipeId, userid, recipe_ref) {
+        var rating = $("#optrating_" + recipeId).val();
+        var likeDislike = $("#optLike_" + recipeId).val();
+        //alert("userId=" + userid + "&RecipeId=" + recipeId + "&Rating=" + rating + "&likeDislike=" + likeDislike);
+        $.ajax({
+            type: 'POST',
+            url: "/browse/updateRating",
+            data: "userId=" + userid + "&RecipeId=" + recipeId + "&Rating=" + rating + "&likeDislike=" + likeDislike,
+            success: function (data) {
+                window.open("/browse/detailRating?RecipeId=" + recipe_ref, '_blank');
+                return data.success;
+            }
+        });
+    }
+</script>
+
+
+

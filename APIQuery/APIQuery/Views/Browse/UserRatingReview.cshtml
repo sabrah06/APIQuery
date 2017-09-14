@@ -1,0 +1,32 @@
+﻿@using APIQuery.Models
+@model UserRating
+@{
+    Layout = "";
+}
+<label>Your ratings:</label>
+@if (Model.Rating > 0)
+{
+    for (int sIndex = 0; sIndex < Model.Rating; sIndex++)
+    {
+        <label><img src="/images/star.jpg" alt="Rating" style="height:20px;width:20px" /></label>
+    }
+}
+<div class="rating">
+    @if (!string.IsNullOrEmpty(Model.PredictedRating) && Convert.ToInt16(Model.PredictedRating) > 0)
+    {
+        <label>Predicted rating Score: @Model.PredictedRatingValue (@Model.PredictedRating)</label>
+    }
+    else
+    {
+        <label>Predicted rating Score:</label><span>Not available (Selected on implicit rating)</span>
+    }
+</div>
+@if (Model.LikeDislike)
+{
+    <label><img src="/images/thumbsup.jpg" alt="Liked it!" style="height:40px;width:40px" /></label>
+}
+else
+{
+    <label><img src="/images/thumbsdown.jpg" alt="Disliked" style="height:40px;width:50px" /></label>
+}
+

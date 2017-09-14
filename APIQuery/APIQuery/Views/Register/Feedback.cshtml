@@ -1,0 +1,51 @@
+﻿@using APIQuery.Models
+@model Survey
+@{
+    ViewBag.Title = "Recipe recommender System - User Evaluation Feedback";
+}
+
+<h2>Survey-Feedback for Recipe Recommendation System</h2>
+@using (Html.BeginForm("Feedback", "Register", FormMethod.Post))
+{
+    <div class="questions">
+        @Html.HiddenFor(m=> m.UserId)
+        <label>Question @Model.ListOfQuestions[0].QuestionOrder.<br />
+        @Model.ListOfQuestions[0].Question</label><br />
+        @Html.RadioButton("Feedback1", Model.ListOfQuestions[0].OptionsValue1)&nbsp;@Model.ListOfQuestions[0].OptionsValue1
+        @Html.RadioButton("Feedback1", Model.ListOfQuestions[0].OptionsValue2)&nbsp;@Model.ListOfQuestions[0].OptionsValue2
+        <br />
+        <label>Question @Model.ListOfQuestions[1].QuestionOrder.<br />
+        @Model.ListOfQuestions[1].Question</label><br />
+        @Html.RadioButtonFor(m => m.Feedback2, Model.ListOfQuestions[1].OptionsValue1)&nbsp;@Model.ListOfQuestions[1].OptionsValue1
+        @Html.RadioButtonFor(m => m.Feedback2, Model.ListOfQuestions[1].OptionsValue2)&nbsp;@Model.ListOfQuestions[1].OptionsValue2
+        @Html.RadioButtonFor(m => m.Feedback2, Model.ListOfQuestions[1].OptionsValue3)&nbsp;@Model.ListOfQuestions[1].OptionsValue3
+        @Html.RadioButtonFor(m => m.Feedback2, Model.ListOfQuestions[1].OptionsValue4)&nbsp;@Model.ListOfQuestions[1].OptionsValue4
+        <br />
+        <label>Question @Model.ListOfQuestions[2].QuestionOrder.<br />
+        @Model.ListOfQuestions[2].Question</label><br />
+        @Html.RadioButtonFor(m => m.Feedback3, Model.ListOfQuestions[2].OptionsValue1)&nbsp;@Model.ListOfQuestions[2].OptionsValue1
+        @Html.RadioButtonFor(m => m.Feedback3, Model.ListOfQuestions[2].OptionsValue2)&nbsp;@Model.ListOfQuestions[2].OptionsValue2
+        @Html.RadioButtonFor(m => m.Feedback3, Model.ListOfQuestions[2].OptionsValue3)&nbsp;@Model.ListOfQuestions[2].OptionsValue3
+        @Html.RadioButtonFor(m => m.Feedback3, Model.ListOfQuestions[2].OptionsValue4)&nbsp;@Model.ListOfQuestions[2].OptionsValue4
+        <br />
+        <label>Question @Model.ListOfQuestions[3].QuestionOrder.<br />
+        @Model.ListOfQuestions[3].Question</label><br />
+        @Html.RadioButtonFor(m => m.Feedback4, Model.ListOfQuestions[3].OptionsValue1)&nbsp;@Model.ListOfQuestions[3].OptionsValue1
+        @Html.RadioButtonFor(m => m.Feedback4, Model.ListOfQuestions[3].OptionsValue2)&nbsp;@Model.ListOfQuestions[3].OptionsValue2
+        @Html.RadioButtonFor(m => m.Feedback4, Model.ListOfQuestions[3].OptionsValue3)&nbsp;@Model.ListOfQuestions[3].OptionsValue3
+        @Html.RadioButtonFor(m => m.Feedback4, Model.ListOfQuestions[3].OptionsValue4)&nbsp;@Model.ListOfQuestions[3].OptionsValue4
+        <br />
+        <label>Question @Model.ListOfQuestions[4].QuestionOrder.<br />
+        @Model.ListOfQuestions[4].Question</label><br />
+        @Html.TextAreaFor(m => m.Feedback5, new { style = "width:500px", @maxlength = "500" })
+        <br /><br />
+        <input type="submit" value="Submit Survey" />
+        <br />
+        <br />
+        @if (ViewBag.Saved == true)
+        {
+            <div style="color:green; font-weight:600; font-size:medium">Thank you for your feedback !.</div>
+        }
+    </div>
+}
+
